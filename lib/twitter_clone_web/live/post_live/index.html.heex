@@ -1,11 +1,24 @@
 <.header>
-  Listing Posts
+  Feed
+  <:subtitle>Listing posts</:subtitle>
   <:actions>
     <.link patch={~p"/posts/new"}>
       <.button>New Post</.button>
     </.link>
   </:actions>
 </.header>
+
+<.simple_form for={@form} id="search_post" phx-change="search" class="mt-4 lg:w-full">
+  <.input
+    phx-mounted={JS.focus()}
+    type="search"
+    name="post"
+    value=""
+    placeholder="Search for a post..."
+    required
+    spellcheck="false"
+  />
+</.simple_form>
 
 <.table
   id="posts"

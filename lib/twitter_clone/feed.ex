@@ -20,6 +20,21 @@ defmodule TwitterClone.Feed do
   end
 
   @doc """
+  Returns the list of posts that match the given title.
+
+  ## Examples
+
+      iex> search_posts("title")
+      [%Post{}, ...]
+
+  """
+  def search_posts(title) do
+    Post
+    |> where([p], ilike(p.title, ^"%#{title}%"))
+    |> Repo.all()
+  end
+
+  @doc """
   Gets a single post.
 
   Raises `Ecto.NoResultsError` if the Post does not exist.

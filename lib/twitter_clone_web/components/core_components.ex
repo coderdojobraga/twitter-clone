@@ -366,6 +366,33 @@ defmodule TwitterCloneWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "search"} = assigns) do
+    ~H"""
+    <div phx-feedback-for={@name}>
+      <.label for={@id}><%= @label %></.label>
+      <div class="relative">
+        <div class="start-0 ps-3 pointer-events-none absolute inset-y-0 flex items-center">
+          <.icon name="hero-magnifying-glass-solid" class="h-4 w-4 text-zinc-500" />
+        </div>
+        <input
+          type="search"
+          id={@id}
+          name={@name}
+          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          class={[
+            "block w-full p-3 ps-10 rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+            "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
+            @errors == [] && "border-zinc-300 focus:border-zinc-400",
+            @errors != [] && "border-rose-400 focus:border-rose-400"
+          ]}
+          {@rest}
+        />
+        <.error :for={msg <- @errors}><%= msg %></.error>
+      </div>
+    </div>
+    """
+  end
+
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
@@ -432,7 +459,7 @@ defmodule TwitterCloneWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8 text-zinc-800">
           <%= render_slot(@inner_block) %>
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
+        <p :if={@subtitle != []} class="text-sm leading-6 text-zinc-600">
           <%= render_slot(@subtitle) %>
         </p>
       </div>

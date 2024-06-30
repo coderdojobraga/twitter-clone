@@ -6,12 +6,44 @@ defmodule TwitterCloneWeb.PostLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :posts, Feed.list_posts())}
+    form = to_form(%{}, as: "post")
+
+    {:ok,
+      socket
+      |> assign(:form, form)
+      |> stream(:posts, Feed.list_posts())}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  @impl true
+  def handle_event("search", %{"post" => ""}, socket) do
+    {:noreply,
+     socket
+     |> stream(:posts, Feed.list_posts(), reset: true)}
+  end
+
+  @impl true
+  def handle_event("search", %{"post" => title}, socket) do
+    {:noreply,
+     socket
+     |> stream(:posts, Feed.search_posts(title), reset: true)}
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    post = Feed.get_post!(id)
+    {:ok, _} = Feed.delete_post(post)
+
+    {:noreply, stream_delete(socket, :posts, post)}
+  end
+
+  @impl true
+  def handle_info({TwitterCloneWeb.PostLive.FormComponent, {:saved, post}}, socket) do
+    {:noreply, stream_insert(socket, :posts, post)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -30,18 +62,5 @@ defmodule TwitterCloneWeb.PostLive.Index do
     socket
     |> assign(:page_title, "Listing Posts")
     |> assign(:post, nil)
-  end
-
-  @impl true
-  def handle_info({TwitterCloneWeb.PostLive.FormComponent, {:saved, post}}, socket) do
-    {:noreply, stream_insert(socket, :posts, post)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    post = Feed.get_post!(id)
-    {:ok, _} = Feed.delete_post(post)
-
-    {:noreply, stream_delete(socket, :posts, post)}
   end
 end
