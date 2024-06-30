@@ -1,11 +1,16 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     TwitterClone.Repo.insert!(%TwitterClone.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+defmodule TwitterClone.Repo.Seeds do
+  @moduledoc """
+  Script for seeding the database with initial data.
+
+  This script is executed by running `mix ecto.seed`.
+  """
+
+  @seeds_dir "priv/repo/seeds"
+
+  def run do
+    ["feed.ex"]
+    |> Enum.each(&Code.require_file(Path.join(@seeds_dir, &1)))
+  end
+end
+
+TwitterClone.Repo.Seeds.run()

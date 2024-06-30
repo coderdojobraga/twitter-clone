@@ -72,7 +72,8 @@ defmodule TwitterClone.MixProject do
 
       # others
       {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.1.1"}
+      {:dns_cluster, "~> 0.1.1"},
+      {:faker, "~> 0.18", only: [:dev, :test]}
     ]
   end
 
