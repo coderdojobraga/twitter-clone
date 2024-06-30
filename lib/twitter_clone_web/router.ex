@@ -17,6 +17,8 @@ defmodule TwitterCloneWeb.Router do
   scope "/", TwitterCloneWeb do
     pipe_through :browser
 
+    get "/", Plugs.Redirect, to: "/posts"
+
     live "/posts", PostLive.Index, :index
     live "/posts/new", PostLive.Index, :new
     live "/posts/:id/edit", PostLive.Index, :edit
