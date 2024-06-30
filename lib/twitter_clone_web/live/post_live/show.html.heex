@@ -1,9 +1,16 @@
 <.header>
   Post <%= @post.id %>
   <:subtitle>This is a post record from your database.</:subtitle>
+
   <:actions>
     <.link patch={~p"/posts/#{@post}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit post</.button>
+    </.link>
+    <.link
+      phx-click={JS.push("delete", value: %{id: @post.id}) |> hide("##{@post.id}")}
+      data-confirm="Are you sure?"
+    >
+      <.button>Delete post</.button>
     </.link>
   </:actions>
 </.header>
