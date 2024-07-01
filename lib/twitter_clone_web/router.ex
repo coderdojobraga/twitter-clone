@@ -19,15 +19,25 @@ defmodule TwitterCloneWeb.Router do
 
   scope "/", TwitterCloneWeb do
     pipe_through :browser
+  end
 
+  scope "/", TwitterCloneWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
     get "/", Plugs.Redirect, to: "/posts"
 
-    live "/posts", PostLive.Index, :index
-    live "/posts/new", PostLive.Index, :new
-    live "/posts/:id/edit", PostLive.Index, :edit
+    live_session :current_user,
+      on_mount: [{TwitterCloneWeb.UserAuth, :mount_current_user}] do
+      live "/posts", PostLive.Index, :index
+      live "/posts/new", PostLive.Index, :new
+      live "/posts/:id/edit", PostLive.Index, :edit
 
-    live "/posts/:id", PostLive.Show, :show
-    live "/posts/:id/show/edit", PostLive.Show, :edit
+      live "/posts/:id", PostLive.Show, :show
+      live "/posts/:id/show/edit", PostLive.Show, :edit
+      live "/users/confirm/:token", UserConfirmationLive, :edit
+      live "/users/confirm", UserConfirmationInstructionsLive, :new
+    end
   end
 
   # Other scopes may use custom stacks.
@@ -75,18 +85,6 @@ defmodule TwitterCloneWeb.Router do
       on_mount: [{TwitterCloneWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-    end
-  end
-
-  scope "/", TwitterCloneWeb do
-    pipe_through [:browser]
-
-    delete "/users/log_out", UserSessionController, :delete
-
-    live_session :current_user,
-      on_mount: [{TwitterCloneWeb.UserAuth, :mount_current_user}] do
-      live "/users/confirm/:token", UserConfirmationLive, :edit
-      live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
 end

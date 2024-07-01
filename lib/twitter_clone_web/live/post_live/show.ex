@@ -2,6 +2,7 @@ defmodule TwitterCloneWeb.PostLive.Show do
   use TwitterCloneWeb, :live_view
 
   alias TwitterClone.Feed
+  alias TwitterClone.Feed.Post
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +14,7 @@ defmodule TwitterCloneWeb.PostLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:post, Feed.get_post!(id))}
+     |> assign(:post, Feed.get_post!(id, Post.preloads()))}
   end
 
   @impl true

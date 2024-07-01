@@ -54,7 +54,11 @@ defmodule TwitterClone.Feed do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id, preloads \\ []) do
+    Post
+    |> Repo.get!(id)
+    |> Repo.preload(preloads)
+  end
 
   @doc """
   Creates a post.

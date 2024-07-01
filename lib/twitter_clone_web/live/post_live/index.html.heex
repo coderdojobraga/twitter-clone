@@ -1,7 +1,8 @@
 <.header>
   Feed
   <:subtitle>Listing posts</:subtitle>
-  <:actions>
+
+  <:actions :if={@current_user}>
     <.link patch={~p"/posts/new"}>
       <.button>New Post</.button>
     </.link>
