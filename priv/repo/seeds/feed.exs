@@ -5,6 +5,7 @@ defmodule TwitterClone.Repo.Seeds.Feed do
   alias TwitterClone.Repo
   alias TwitterClone.Feed
   alias TwitterClone.Feed.Post
+  alias TwitterClone.Accounts.User
 
   def run do
     case Repo.all(Post) do
@@ -17,11 +18,13 @@ defmodule TwitterClone.Repo.Seeds.Feed do
   end
 
   defp seed_posts do
+    users = Repo.all(User)
+
     for i <- 1..50 do
       %{
         "title" => "Post #{i}",
         "body" => Faker.Lorem.paragraph(),
-        "username" => Faker.Internet.user_name(),
+        "user_id" => Enum.random(users).id
       }
       |> Feed.create_post()
     end

@@ -32,5 +32,9 @@ defmodule TwitterClone.Repo.Migrations.CreateUsersAuthTables do
 
     create index(:users_tokens, [:user_id])
     create unique_index(:users_tokens, [:context, :token])
+
+    alter table(:posts) do
+      add :user_id, references(:users, on_delete: :delete_all, type: :binary_id)
+    end
   end
 end

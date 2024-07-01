@@ -1,6 +1,8 @@
 defmodule TwitterClone.Accounts.User do
   use TwitterClone, :schema
 
+  alias TwitterClone.Feed.Post
+
   @required_fields ~w(email password username)a
 
   schema "users" do
@@ -11,6 +13,8 @@ defmodule TwitterClone.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+
+    has_many :posts, Post
 
     timestamps(type: :utc_datetime)
   end

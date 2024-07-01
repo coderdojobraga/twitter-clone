@@ -17,7 +17,7 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
           <div class="grid gap-3">
             <div class="grid gap-0.5">
               <h2 class="text-sm font-medium leading-snug text-gray-900">
-                <%= @post.username %>
+                @<%= @post.user.username %>
                 <span class="text-gray-500">added a new post</span>
               </h2>
               <h3 class="text-xs font-normal leading-4 text-gray-500">
