@@ -1,5 +1,5 @@
 <.header>
-  Post <%= @post.id %>
+  <%= @post.title %>
   <:subtitle>This is a post record from your database.</:subtitle>
 
   <:actions>
@@ -16,7 +16,6 @@
 </.header>
 
 <.list>
-  <:item title="Title"><%= @post.title %></:item>
   <:item title="Body"><%= @post.body %></:item>
   <:item title="Username"><%= @post.user.username %></:item>
   <:item title="Likes"><%= @post.likes %></:item>
