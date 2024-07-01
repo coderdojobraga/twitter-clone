@@ -17,7 +17,7 @@
 
 <.list>
   <:item title="Body"><%= @post.body %></:item>
-  <:item title="Username"><%= @post.user.username %></:item>
+  <:item title="Created by">@<%= @post.user.username %></:item>
   <:item title="Likes"><%= @post.like_count %></:item>
   <:item title="Reposts"><%= @post.repost_count %></:item>
 </.list>
