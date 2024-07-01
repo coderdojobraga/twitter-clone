@@ -17,6 +17,10 @@ defmodule TwitterCloneWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :confirm_post_association do
+    plug TwitterCloneWeb.Plugs.VerifyAssociation, &TwitterClone.Feed.get_post!/1
+  end
+
   scope "/", TwitterCloneWeb do
     pipe_through :browser
   end
@@ -29,14 +33,16 @@ defmodule TwitterCloneWeb.Router do
 
     live_session :current_user,
       on_mount: [{TwitterCloneWeb.UserAuth, :mount_current_user}] do
-      live "/posts", PostLive.Index, :index
-      live "/posts/new", PostLive.Index, :new
-      live "/posts/:id/edit", PostLive.Index, :edit
-
-      live "/posts/:id", PostLive.Show, :show
-      live "/posts/:id/show/edit", PostLive.Show, :edit
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+
+      live "/posts", PostLive.Index, :index
+      live "/posts/new", PostLive.Index, :new
+      live "/posts/:id", PostLive.Show, :show
+
+      pipe_through [:confirm_post_association]
+      live "/posts/:id/edit", PostLive.Index, :edit
+      live "/posts/:id/show/edit", PostLive.Show, :edit
     end
   end
 

@@ -2,7 +2,7 @@
   <%= @post.title %>
   <:subtitle>This is a post record from your database.</:subtitle>
 
-  <:actions>
+  <:actions :if={@current_user?}>
     <.link patch={~p"/posts/#{@post}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit post</.button>
     </.link>

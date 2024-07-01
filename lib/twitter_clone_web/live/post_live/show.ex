@@ -14,7 +14,8 @@ defmodule TwitterCloneWeb.PostLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:post, Feed.get_post!(id, Post.preloads()))}
+     |> assign(:post, Feed.get_post!(id, Post.preloads()))
+     |> then(fn socket -> assign(socket, :current_user?, current_user?(socket)) end)}
   end
 
   @impl true
@@ -27,6 +28,12 @@ defmodule TwitterCloneWeb.PostLive.Show do
      |> put_flash(:info, "Post deleted successfully")
      |> push_navigate(to: ~p"/posts")}
   end
+
+  defp current_user?(socket) when not is_nil(socket.assigns.current_user) do
+    socket.assigns.current_user.id == socket.assigns.post.user_id
+  end
+
+  defp current_user?(_socket), do: false
 
   defp page_title(:show), do: "Show Post"
   defp page_title(:edit), do: "Edit Post"
