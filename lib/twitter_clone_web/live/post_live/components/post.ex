@@ -21,7 +21,7 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
                 <span class="text-gray-500">added a new post</span>
               </h2>
               <h3 class="text-xs font-normal leading-4 text-gray-500">
-                <%= @post.inserted_at %>
+                <%= relative_datetime(@post.inserted_at) %>
               </h3>
             </div>
           </div>

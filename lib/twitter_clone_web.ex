@@ -83,9 +83,13 @@ defmodule TwitterCloneWeb do
     quote do
       # HTML escaping functionality
       import Phoenix.HTML
+
       # Core UI components and translation
       import TwitterCloneWeb.CoreComponents
       import TwitterCloneWeb.Gettext
+
+      # Custom imports
+      import TwitterCloneWeb.Utils
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

@@ -71,6 +71,7 @@ defmodule TwitterClone.MixProject do
       {:gettext, "~> 0.20"},
 
       # others
+      {:timex, "~> 3.7.11"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:faker, "~> 0.18", only: [:dev, :test]}
