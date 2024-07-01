@@ -24,6 +24,31 @@ defmodule TwitterClone do
       import Ecto.Query, warn: false
 
       alias TwitterClone.Repo
+
+      def apply_filters(query, opts) do
+        Enum.reduce(opts, query, fn
+          {:where, filters}, query ->
+            where(query, ^filters)
+
+          {:fields, fields}, query ->
+            select(query, [i], map(i, ^fields))
+
+          {:order_by, criteria}, query ->
+            order_by(query, ^criteria)
+
+          {:limit, criteria}, query ->
+            limit(query, ^criteria)
+
+          {:offset, criteria}, query ->
+            offset(query, ^criteria)
+
+          {:preloads, preload}, query ->
+            preload(query, ^preload)
+
+          _, query ->
+            query
+        end)
+      end
     end
   end
 

@@ -11,7 +11,7 @@ defmodule TwitterCloneWeb.PostLive.Index do
     {:ok,
      socket
      |> assign(:form, form)
-     |> stream(:posts, Feed.list_posts())}
+     |> stream(:posts, Feed.list_posts(order_by: [desc: :inserted_at]))}
   end
 
   @impl true
@@ -23,14 +23,14 @@ defmodule TwitterCloneWeb.PostLive.Index do
   def handle_event("search", %{"post" => ""}, socket) do
     {:noreply,
      socket
-     |> stream(:posts, Feed.list_posts(), reset: true)}
+     |> stream(:posts, Feed.list_posts(order_by: [desc: :inserted_at]), reset: true)}
   end
 
   @impl true
   def handle_event("search", %{"post" => title}, socket) do
     {:noreply,
      socket
-     |> stream(:posts, Feed.search_posts(title), reset: true)}
+     |> stream(:posts, Feed.search_posts(title, order_by: [desc: :inserted_at]), reset: true)}
   end
 
   @impl true

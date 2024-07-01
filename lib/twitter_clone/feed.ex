@@ -14,9 +14,14 @@ defmodule TwitterClone.Feed do
       iex> list_posts()
       [%Post{}, ...]
 
+      iex> list_posts(order_by: [desc: :inserted_at])
+      [%Post{}, ...]
+
   """
-  def list_posts do
-    Repo.all(Post)
+  def list_posts(opts \\ []) do
+    Post
+    |> apply_filters(opts)
+    |> Repo.all()
   end
 
   @doc """
@@ -28,9 +33,10 @@ defmodule TwitterClone.Feed do
       [%Post{}, ...]
 
   """
-  def search_posts(title) do
+  def search_posts(title, opts) do
     Post
     |> where([p], ilike(p.title, ^"%#{title}%"))
+    |> apply_filters(opts)
     |> Repo.all()
   end
 
