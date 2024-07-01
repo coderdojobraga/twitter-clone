@@ -4,7 +4,8 @@ defmodule TwitterClone.Feed do
   """
   use TwitterClone, :context
 
-  alias TwitterClone.Feed.Post
+  alias TwitterClone.Accounts.User
+  alias TwitterClone.Feed.{Post, Like}
 
   @doc """
   Returns the list of posts.
@@ -123,5 +124,62 @@ defmodule TwitterClone.Feed do
   """
   def change_post(%Post{} = post, attrs \\ %{}) do
     Post.changeset(post, attrs)
+  end
+
+  @doc """
+  Likes a post.
+
+  ## Examples
+
+      iex> like_post(post, user)
+      %Post{}
+
+  """
+  def like_post(%Post{} = post, %User{} = user) do
+    %Like{}
+    |> Like.changeset(%{post_id: post.id, user_id: user.id})
+    |> Repo.insert!()
+
+    get_post!(post.id, Post.preloads())
+  end
+
+  @doc """
+  Unlikes a post.
+
+  ## Examples
+
+      iex> unlike_post(post, user)
+      %Post{}
+
+  """
+  def unlike_post(%Post{} = post, %User{} = user) do
+    like = get_like!(post, user)
+
+    Multi.new()
+    |> Multi.delete(:like, like)
+    |> Multi.update(:post, Post.changeset(post, %{like_count: post.like_count - 1}))
+    |> Repo.transaction()
+
+    get_post!(post.id, Post.preloads())
+  end
+
+  @doc """
+  Gets a like.
+
+  Raises `Ecto.NoResultsError` if the Like does not exist.
+
+  ## Examples
+
+      iex> get_like!(post, user)
+      %Like{}
+
+      iex> get_like!(post, user)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_like!(%Post{} = post, %User{} = user) do
+    Like
+    |> where([l], l.post_id == ^post.id and l.user_id == ^user.id)
+    |> Repo.one!()
   end
 end

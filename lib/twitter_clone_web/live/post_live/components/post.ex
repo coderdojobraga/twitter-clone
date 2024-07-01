@@ -1,6 +1,7 @@
 defmodule TwitterCloneWeb.PostLive.Components.Post do
   use TwitterCloneWeb, :live_component
 
+  alias TwitterClone.Feed
   alias TwitterClone.Feed.Post
 
   attr :post, Post, required: true
@@ -34,17 +35,61 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
       </.link>
 
       <div class="left-[22px] absolute bottom-3 mt-6 flex gap-3">
-        <button class="flex gap-1 items-center text-xs font-medium leading-4 text-gray-600 hover:text-green-500">
+        <button
+          phx-click="like"
+          disabled={!@current_user}
+          phx-target={@myself}
+          class={[
+            @current_user && "hover:text-green-500",
+            !@current_user && "cursor-not-allowed",
+            "flex gap-1 items-center text-xs font-medium leading-4 text-gray-600",
+            current_user_liked?(@current_user, @post) && "text-green-500 hover:text-green-800"
+          ]}
+        >
           <.icon name="hero-hand-thumb-up" class="size-5" />
-          <span><%= @post.likes %></span>
+          <span><%= @post.like_count %></span>
         </button>
 
-        <button class="flex gap-1 items-center text-xs font-medium leading-4 text-gray-600 hover:text-amber-500">
+        <button
+          disabled={!@current_user}
+          class={[
+            @current_user && "hover:text-amber-500",
+            !@current_user && "cursor-not-allowed",
+            "flex gap-1 items-center text-xs font-medium leading-4 text-gray-600"
+          ]}
+        >
           <.icon name="hero-arrow-path-rounded-square" class="size-5" />
-          <span><%= @post.reposts %></span>
+          <span><%= @post.repost_count %></span>
         </button>
       </div>
     </div>
     """
+  end
+
+  @impl true
+  def handle_event("like", _, socket) do
+    user = socket.assigns.current_user
+    post = socket.assigns.post
+
+    if current_user_liked?(user, post) do
+      unlike_post(socket, post, user)
+    else
+      like_post(socket, post, user)
+    end
+  end
+
+  defp like_post(socket, post, user) do
+    post = Feed.like_post(post, user)
+    {:noreply, assign(socket, post: post)}
+  end
+
+  defp unlike_post(socket, post, user) do
+    post = Feed.unlike_post(post, user)
+    {:noreply, assign(socket, post: post)}
+  end
+
+  defp current_user_liked?(user, post) do
+    post.likes
+    |> Enum.any?(&(&1.user_id == user.id))
   end
 end

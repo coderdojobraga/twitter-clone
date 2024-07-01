@@ -8,8 +8,9 @@ defmodule TwitterClone.Repo.Migrations.CreatePosts do
       add :title, :string, null: false
       add :body, :text, null: false
       add :username, :string
-      add :likes, :integer
-      add :reposts, :integer
+
+      add :like_count, :integer
+      add :repost_count, :integer
 
       timestamps(type: :utc_datetime)
     end

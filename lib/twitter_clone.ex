@@ -23,6 +23,7 @@ defmodule TwitterClone do
     quote do
       import Ecto.Query, warn: false
 
+      alias Ecto.Multi
       alias TwitterClone.Repo
 
       def apply_filters(query, opts) do
