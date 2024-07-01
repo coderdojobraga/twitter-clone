@@ -44,6 +44,9 @@ defmodule TwitterClone.MixProject do
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
 
+      # authentication
+      {:argon2_elixir, "~> 3.0"},
+
       # frontend
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},

@@ -1,0 +1,52 @@
+<header class="px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+    <div class="flex items-center gap-3">
+      <a href="/">
+        <img src={~p"/images/logo.svg"} width="40" />
+      </a>
+      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
+        v<%= Application.spec(:phoenix_live_view)[:vsn] %>
+      </p>
+    </div>
+    <div class="flex items-center gap-4 font-semibold leading-6">
+      <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+        <%= if @current_user do %>
+          <li>
+            <.link
+              href={~p"/users/settings"}
+              class="rounded-lg bg-zinc-100 px-2 py-1.5 hover:bg-zinc-200/80"
+            >
+              Settings
+            </.link>
+          </li>
+          <li>
+            <.link
+              href={~p"/users/log_out"}
+              method="delete"
+              class="rounded-lg bg-zinc-100 px-2 py-1.5 hover:bg-zinc-200/80"
+            >
+              <%= gettext("Log out") %> <span aria-hidden="true">&rarr;</span>
+            </.link>
+          </li>
+        <% else %>
+          <li>
+            <.link
+              href={~p"/users/register"}
+              class="rounded-lg bg-zinc-100 px-2 py-1.5 hover:bg-zinc-200/80"
+            >
+              Register
+            </.link>
+          </li>
+          <li>
+            <.link
+              href={~p"/users/log_in"}
+              class="rounded-lg bg-zinc-100 px-2 py-1.5 hover:bg-zinc-200/80"
+            >
+              <%= gettext("Log in") %> <span aria-hidden="true">&rarr;</span>
+            </.link>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</header>
