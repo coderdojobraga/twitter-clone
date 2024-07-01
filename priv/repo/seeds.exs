@@ -8,7 +8,7 @@ defmodule TwitterClone.Repo.Seeds do
   @seeds_dir "priv/repo/seeds"
 
   def run do
-    ["feed.ex"]
+    ["accounts.exs", "feed.exs"]
     |> Enum.each(&Code.require_file(Path.join(@seeds_dir, &1)))
   end
 end

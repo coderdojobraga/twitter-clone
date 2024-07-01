@@ -1,7 +1,7 @@
 defmodule TwitterClone.Accounts.UserToken do
-  use Ecto.Schema
-  import Ecto.Query
-  alias TwitterClone.Accounts.UserToken
+  use TwitterClone, :schema
+
+  alias TwitterClone.Accounts.{User, UserToken}
 
   @hash_algorithm :sha256
   @rand_size 32
@@ -13,13 +13,12 @@ defmodule TwitterClone.Accounts.UserToken do
   @change_email_validity_in_days 7
   @session_validity_in_days 60
 
-  @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "users_tokens" do
     field :token, :binary
     field :context, :string
     field :sent_to, :string
-    belongs_to :user, TwitterClone.Accounts.User
+
+    belongs_to :user, User
 
     timestamps(type: :utc_datetime, updated_at: false)
   end
