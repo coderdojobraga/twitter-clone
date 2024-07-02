@@ -43,7 +43,7 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
             @current_user && "hover:text-green-500",
             !@current_user && "cursor-not-allowed",
             "flex gap-1 items-center text-xs font-medium leading-4 text-gray-600",
-            current_user_liked?(@current_user, @post) && "text-green-500 hover:text-green-800"
+            current_user_liked?(@current_user, @post) && "!text-green-500 !hover:text-green-800"
           ]}
         >
           <.icon name="hero-hand-thumb-up" class="size-5" />
@@ -51,11 +51,14 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
         </button>
 
         <button
+          phx-click="repost"
           disabled={!@current_user}
+          phx-target={@myself}
           class={[
             @current_user && "hover:text-amber-500",
             !@current_user && "cursor-not-allowed",
-            "flex gap-1 items-center text-xs font-medium leading-4 text-gray-600"
+            "flex gap-1 items-center text-xs font-medium leading-4 text-gray-600",
+            current_user_reposted?(@current_user, @post) && "!text-amber-500 !hover:text-amber-800"
           ]}
         >
           <.icon name="hero-arrow-path-rounded-square" class="size-5" />
@@ -78,6 +81,18 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
     end
   end
 
+  @impl true
+  def handle_event("repost", _, socket) do
+    user = socket.assigns.current_user
+    post = socket.assigns.post
+
+    if current_user_reposted?(user, post) do
+      unrepost_post(socket, post, user)
+    else
+      repost_post(socket, post, user)
+    end
+  end
+
   defp like_post(socket, post, user) do
     post = Feed.like_post(post, user)
     {:noreply, assign(socket, post: post)}
@@ -88,8 +103,27 @@ defmodule TwitterCloneWeb.PostLive.Components.Post do
     {:noreply, assign(socket, post: post)}
   end
 
+  defp repost_post(socket, post, user) do
+    post = Feed.repost_post(post, user)
+    {:noreply, assign(socket, post: post)}
+  end
+
+  defp unrepost_post(socket, post, user) do
+    post = Feed.unrepost_post(post, user)
+    {:noreply, assign(socket, post: post)}
+  end
+
+  defp current_user_liked?(nil, _), do: false
+
   defp current_user_liked?(user, post) do
     post.likes
+    |> Enum.any?(&(&1.user_id == user.id))
+  end
+
+  defp current_user_reposted?(nil, _), do: false
+
+  defp current_user_reposted?(user, post) do
+    post.reposts
     |> Enum.any?(&(&1.user_id == user.id))
   end
 end

@@ -1,4 +1,4 @@
-defmodule TwitterClone.Feed.Like do
+defmodule TwitterClone.Feed.Repost do
   use TwitterClone, :schema
 
   alias TwitterClone.Accounts.User
@@ -6,7 +6,7 @@ defmodule TwitterClone.Feed.Like do
 
   @required_fields ~w(user_id post_id)a
 
-  schema "likes" do
+  schema "reposts" do
     belongs_to :post, Post
     belongs_to :user, User
 
@@ -14,18 +14,18 @@ defmodule TwitterClone.Feed.Like do
   end
 
   @doc false
-  def changeset(like, attrs) do
-    like
+  def changeset(repost, attrs) do
+    repost
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
-    |> unique_constraint([:user_id, :post_id], name: :unique_like)
-    |> prepare_changes(&increment_post_likes/1)
+    |> unique_constraint([:user_id, :post_id], name: :unique_repost)
+    |> prepare_changes(&increment_post_reposts/1)
   end
 
-  defp increment_post_likes(changeset) do
+  defp increment_post_reposts(changeset) do
     if post_id = get_change(changeset, :post_id) do
       query = from Post, where: [id: ^post_id]
-      changeset.repo.update_all(query, inc: [like_count: 1])
+      changeset.repo.update_all(query, inc: [repost_count: 1])
     end
 
     changeset

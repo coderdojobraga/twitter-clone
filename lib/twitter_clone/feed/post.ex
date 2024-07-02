@@ -2,7 +2,7 @@ defmodule TwitterClone.Feed.Post do
   use TwitterClone, :schema
 
   alias TwitterClone.Accounts.User
-  alias TwitterClone.Feed.Like
+  alias TwitterClone.Feed.{Like, Repost}
 
   @required_fields ~w(title body user_id)a
   @optional_fields ~w(like_count repost_count)a
@@ -15,7 +15,9 @@ defmodule TwitterClone.Feed.Post do
     field :repost_count, :integer, default: 0
 
     belongs_to :user, User
+
     has_many :likes, Like
+    has_many :reposts, Repost
 
     timestamps(type: :utc_datetime)
   end
@@ -28,5 +30,5 @@ defmodule TwitterClone.Feed.Post do
     |> validate_length(:body, min: 2, max: 250)
   end
 
-  def preloads, do: [:user, :likes]
+  def preloads, do: [:user, :likes, :reposts]
 end
