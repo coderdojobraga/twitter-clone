@@ -6,6 +6,8 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :twitter_clone, TwitterCloneWeb.Endpoint,
+  url: [scheme: "https", host: "twitter.coderdojobraga.org", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Configures Swoosh API Client

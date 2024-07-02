@@ -6,7 +6,7 @@ kill_signal = 'SIGTERM'
   release_command = '/app/bin/migrate'
 
 [env]
-  PHX_HOST = 'twitter-clone-phx.fly.dev'
+  PHX_HOST = 'twitter.coderdojobraga.org'
   PORT = '8080'
 
 [http_service]
