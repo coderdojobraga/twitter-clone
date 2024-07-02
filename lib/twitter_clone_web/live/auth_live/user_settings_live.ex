@@ -29,7 +29,7 @@ defmodule TwitterCloneWeb.UserSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
+            <.button disabled class="hover:cursor-not-allowed">Change Email</.button>
           </:actions>
         </.simple_form>
       </div>
@@ -65,7 +65,7 @@ defmodule TwitterCloneWeb.UserSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
+            <.button disabled class="hover:cursor-not-allowed">Change Password</.button>
           </:actions>
         </.simple_form>
       </div>
