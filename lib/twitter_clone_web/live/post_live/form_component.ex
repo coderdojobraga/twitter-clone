@@ -52,7 +52,7 @@ defmodule TwitterCloneWeb.PostLive.FormComponent do
   defp save_post(socket, :edit, post_params) do
     case Feed.update_post(socket.assigns.post, post_params) do
       {:ok, post} ->
-        notify_parent({:saved, post})
+        notify_parent({:saved, Feed.with_default_post_preloads(post)})
 
         {:noreply,
          socket
@@ -70,9 +70,8 @@ defmodule TwitterCloneWeb.PostLive.FormComponent do
       |> Map.put("user_id", socket.assigns.current_user.id)
 
     case Feed.create_post(post_params) do
-      {:ok, _} ->
-        post = Feed.get_post!(socket.assigns.post.id)
-        notify_parent({:saved, post})
+      {:ok, post} ->
+        notify_parent({:saved, Feed.with_default_post_preloads(post)})
 
         {:noreply,
          socket

@@ -126,6 +126,11 @@ defmodule TwitterClone.Feed do
     Post.changeset(post, attrs)
   end
 
+  def with_default_post_preloads(%Post{} = post) do
+    post
+    |> Repo.preload(Post.preloads())
+  end
+
   @doc """
   Likes a post.
 
